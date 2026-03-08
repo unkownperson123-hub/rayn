@@ -1,10 +1,15 @@
 import asyncio
-asyncio.set_event_loop(asyncio.new_event_loop())
-
 from pyrogram import Client
 from pytgcalls import PyTgCalls
-from config import API_ID, API_HASH, BOT_TOKEN, STRING_SESSION
+import os
 
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+SESSION_STRING = os.getenv("SESSION_STRING")
+
+# Bot client
 bot = Client(
     "rayn-bot",
     api_id=API_ID,
@@ -12,20 +17,32 @@ bot = Client(
     bot_token=BOT_TOKEN
 )
 
+# Assistant client
 assistant = Client(
     "rayn-assistant",
     api_id=API_ID,
     api_hash=API_HASH,
-    session_string=STRING_SESSION
+    session_string=SESSION_STRING
 )
 
-call = PyTgCalls(assistant)
+# Voice chat
+pytgcalls = PyTgCalls(assistant)
 
-async def main():
+async def start_bot():
+    print("Starting Rayn Bot...")
+
     await bot.start()
+    print("Bot Started")
+
     await assistant.start()
-    await call.start()
-    print("Bot started successfully")
+    print("Assistant Started")
+
+    await pytgcalls.start()
+    print("Voice Chat Engine Started")
+
+    print("Rayn Music Bot Running 🚀")
+
     await asyncio.Event().wait()
 
-asyncio.run(main())
+if name == "main":
+    asyncio.run(start_bot())
