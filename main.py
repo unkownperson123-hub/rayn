@@ -1,3 +1,6 @@
+import asyncio
+asyncio.set_event_loop(asyncio.new_event_loop())
+
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
 from config import API_ID, API_HASH, BOT_TOKEN, STRING_SESSION
@@ -18,23 +21,17 @@ assistant = Client(
     session_string=STRING_SESSION
 )
 
-# Voice Chat Player
+# Voice Chat Client
 call = PyTgCalls(assistant)
-
-@bot.on_message(filters.command("start"))
-async def start(_, message):
-    await message.reply_text(
-        "🎵 Rayn Music Bot Online\n\nUse /play to play music in VC."
-    )
 
 async def main():
     await bot.start()
     await assistant.start()
     await call.start()
-    print("Rayn Music Bot Started")
 
-    await idle()
+    print("✅ RAYN Music Bot Started Successfully")
 
-from pyrogram.idle import idle
-import asyncio
-asyncio.get_event_loop().run_until_complete(main())
+    await asyncio.Event().wait()
+
+if name == "main":
+    asyncio.run(main())
